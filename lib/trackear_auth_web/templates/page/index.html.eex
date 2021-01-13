@@ -1,0 +1,4 @@
+<a href="<%= @oauth_google_url %>"
+   class="text-blue-400 hover:text-blue-300">
+    Ingresar con Google
+</a>
