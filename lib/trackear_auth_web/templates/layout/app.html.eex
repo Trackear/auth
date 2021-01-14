@@ -8,11 +8,17 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body class="bg-gray-100 text-gray-800">
+  <body class="flex flex-col h-full bg-gray-100">
     <main role="main" class="mx-auto container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
+      <h1 class="text-center text-gray-800 font-bold text-2xl my-4 flex items-center justify-center mt-10">
+        <svg class="mr-2 w-6 text-pink-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        Trackear.app
+      </h1>
+      <div class="w-full max-w-md mx-auto bg-white shadow-lg rounded px-8 py-6 mt-4 border">
+        <%= @inner_content %>
+      </div>
     </main>
   </body>
 </html>

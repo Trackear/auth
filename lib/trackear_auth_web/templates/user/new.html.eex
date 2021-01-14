@@ -1,5 +1,7 @@
-<h1>New User</h1>
+<h1 class="font-bold text-lg">Crear cuenta</h1>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
 
-<span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>
+<div class="text-center my-2">
+    ¿Ya tenés cuenta? <%= link "Ingresar", to: Routes.page_path(@conn, :index) %>
+</div>

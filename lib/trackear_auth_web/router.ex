@@ -17,8 +17,10 @@ defmodule TrackearAuthWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/login", PageController, :create
     get "/auth/google/callback", GoogleAuthController, :index
     resources "/users", UserController
+    resources "/sessions", SessionController
   end
 
   # Other scopes may use custom stacks.

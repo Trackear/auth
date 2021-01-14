@@ -3,3 +3,36 @@
 @tailwind components;
 
 @tailwind utilities;
+
+label {
+    @apply block;
+    @apply text-gray-700;
+    @apply text-sm;
+    @apply font-bold;
+    @apply mb-2;
+}
+
+input {
+    @apply bg-white;
+    @apply outline-none;
+    @apply appearance-none; 
+    @apply border;
+    @apply rounded;
+    @apply w-full;
+    @apply p-2;
+    @apply text-gray-700;
+    @apply leading-normal;
+}
+
+button {
+    @apply bg-blue-500;
+    @apply rounded;
+    @apply px-4;
+    @apply py-2;
+    @apply text-white;
+    @apply font-bold;
+}
+
+a {
+    @apply text-blue-400;
+}
