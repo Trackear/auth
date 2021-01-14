@@ -6,9 +6,8 @@ defmodule TrackearAuth.Accounts.User do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
-    field :password, :string
-
-    timestamps()
+    field :encrypted_password, :string
+    field :password, :string, virtual: true
   end
 
   @doc false

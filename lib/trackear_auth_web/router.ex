@@ -18,6 +18,7 @@ defmodule TrackearAuthWeb.Router do
 
     get "/", PageController, :index
     get "/auth/google/callback", GoogleAuthController, :index
+    resources "/users", UserController
   end
 
   # Other scopes may use custom stacks.
