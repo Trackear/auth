@@ -3,6 +3,7 @@ defmodule TrackearAuthWeb.PageController do
 
   alias TrackearAuth.Accounts
   alias TrackearAuth.Accounts.User
+  alias TrackearAuth.Accounts.Session
 
   def index(conn, _params) do
     oauth_google_url = ElixirAuthGoogle.generate_oauth_url(conn)
@@ -18,15 +19,15 @@ defmodule TrackearAuthWeb.PageController do
     email = user_params["email"]
     password = user_params["password"]
 
-    case Accounts.get_user_from_credentials(email, password) do
-      {:ok, user} ->
+    case Accounts.create_session_from_credentials(email, password) do
+      {:ok, session} ->
         conn
-        |> put_flash(:info, "User created successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
-      :error ->
+        |> redirect(external: "https://www.trackear.app/sessions/#{session.token}")
+
+      {:error, changeset} ->
         render(conn, "index.html", [
           oauth_google_url: oauth_google_url,
-          changeset: Accounts.change_user(%User{}, user_params),
+          changeset: changeset,
         ])
     end
   end

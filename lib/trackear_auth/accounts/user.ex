@@ -4,10 +4,10 @@ defmodule TrackearAuth.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :password, :string, virtual: true
+    field :encrypted_password, :string
     field :first_name, :string
     field :last_name, :string
-    field :encrypted_password, :string
-    field :password, :string, virtual: true
   end
 
   @doc false
@@ -15,5 +15,19 @@ defmodule TrackearAuth.Accounts.User do
     user
     |> cast(attrs, [:email, :password, :first_name, :last_name])
     |> validate_required([:email, :password, :first_name, :last_name])
+    |> validate_format(:email, ~r/@/)
+    |> add_encrypted_password
+  end
+
+  @doc false
+  defp add_encrypted_password(changeset) do
+    if Map.has_key?(changeset.changes, :password) do
+      password = changeset.changes.password
+      encrypted_password = Bcrypt.hash_pwd_salt(password)
+      changeset
+      |> put_change(:encrypted_password, encrypted_password)
+    else
+      changeset
+    end
   end
 end

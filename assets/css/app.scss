@@ -4,6 +4,10 @@
 
 @tailwind utilities;
 
+html {
+    font-family: Nunito;
+}
+
 label {
     @apply block;
     @apply text-gray-700;
@@ -13,6 +17,9 @@ label {
 }
 
 input {
+    @apply transition;
+    @apply duration-300;
+    @apply ease-in-out;
     @apply bg-white;
     @apply outline-none;
     @apply appearance-none; 
@@ -22,17 +29,49 @@ input {
     @apply p-2;
     @apply text-gray-700;
     @apply leading-normal;
+
+    &:hover {
+        @apply shadow;
+    }
+
+    &:focus {
+        @apply border-pink-400;
+        @apply shadow;
+    }
 }
 
 button {
+    @apply transition;
+    @apply duration-300;
+    @apply ease-in-out;
     @apply bg-blue-500;
     @apply rounded;
     @apply px-4;
     @apply py-2;
     @apply text-white;
     @apply font-bold;
+
+    &:hover {
+        @apply bg-blue-400;
+        @apply shadow;
+    }
 }
 
 a {
     @apply text-blue-400;
+    @apply transition;
+    @apply duration-300;
+    @apply ease-in-out;
+
+    &:hover {
+        @apply text-blue-300;
+    }
+}
+
+.invalid-feedback {
+    @apply text-red-400;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
 }

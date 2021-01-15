@@ -6,6 +6,8 @@ services:
       - /var/lib/postgresql/data
   app:
     build: .
+    env_file:
+      - ./.env
     command:
       - ./run.sh
     volumes:

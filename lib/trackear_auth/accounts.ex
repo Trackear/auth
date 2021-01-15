@@ -4,9 +4,10 @@ defmodule TrackearAuth.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias TrackearAuth.Repo
 
+  alias TrackearAuth.Repo
   alias TrackearAuth.Accounts.User
+  alias TrackearAuth.Accounts.Session
 
   @doc """
   Returns the list of users.
@@ -46,17 +47,16 @@ defmodule TrackearAuth.Accounts do
       {:ok, %User{}}
 
       iex> create_user("foo@bar.com", "incorrect-password")
-      :error
+      {:error, :invalid_credentials}
 
   """
   def get_user_from_credentials(email, password) do
     case Repo.get_by(User, email: email) do
-      {:ok, user} ->
-        # hashed_password = Bcrypt.hash_pwd_salt(password)
-        matches = Bcrypt.verify_pass(password, user["encrypted_password"])
-        if matches, do: {:ok, user}, else: :error
+      %User{} = user ->
+        matches = Bcrypt.verify_pass(password, user.encrypted_password)
+        if matches, do: {:ok, user}, else: {:error, :invalid_credentials}
       nil ->
-        :error
+        {:error, :invalid_credentials}
     end
   end
 
@@ -125,8 +125,6 @@ defmodule TrackearAuth.Accounts do
     User.changeset(user, attrs)
   end
 
-  alias TrackearAuth.Accounts.Session
-
   @doc """
   Returns the list of session.
 
@@ -172,6 +170,73 @@ defmodule TrackearAuth.Accounts do
     %Session{}
     |> Session.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Creates a user and from it, create a session.
+
+  ## Examples
+
+      iex> create_user_and_return_session(%{field: value})
+      {:ok, %Session{}}
+
+      iex> create_user_and_return_session(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user_and_return_session(attrs \\ %{}) do
+    case create_user(attrs) do
+      {:ok, user} ->
+        create_session(%{ user_id: user.id })
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Get a user from email. If found, a session will be created
+  for the user. If no user is found, a new one will be created
+  and then, a session for it will be returned.
+
+  ## Examples
+
+      iex> get_or_create_user_and_return_session(%{email: "foo@email.com"})
+      {:ok, %Session{}}
+
+      iex> get_or_create_user_and_return_session(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def get_or_create_user_and_return_session(attrs \\ %{}) do
+    case Repo.get_by(User, email: attrs.email) do
+      %User{} = user ->
+        create_session(%{ user_id: user.id })
+      nil ->
+        create_user_and_return_session(attrs)
+    end
+  end
+
+  @doc """
+  Creates a new session from credentials (email and password).
+
+  ## Examples
+
+      iex> create_session_from_credentials("foo@email.com", "bar")
+      {:ok, %Session{}}
+
+      iex> create_session_from_credentials("foo@email.com", "incorrect-pass")
+      {:error, %Changeset{}}
+
+  """
+  def create_session_from_credentials(email, password) do
+    case get_user_from_credentials(email, password) do
+      {:ok, %User{} = user} ->
+        create_session(%{ user_id: user.id })
+      {:error, _} ->
+        change_user(%User{}, %{email: email, password: password})
+        |> Ecto.Changeset.add_error(:base, "Invalid credentials")
+        |> Ecto.Changeset.apply_action(:insert)
+    end
   end
 
   @doc """

@@ -6,6 +6,10 @@
     <strong>Id:</strong>
     <%= @session.id %>
   </li>
+  <li>
+    <strong>Token:</strong>
+    <%= @session.token %>
+  </li>
 
 </ul>
 
