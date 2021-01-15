@@ -45,7 +45,8 @@ defmodule TrackearAuth.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:elixir_auth_google, "~> 1.3.0"},
+      {:elixir_auth_google, "~> 1.0.3"},
+      {:elixir_auth_github, "~> 1.0.3"},
       {:bcrypt_elixir, "~> 2.0"}
     ]
   end

@@ -19,6 +19,7 @@ defmodule TrackearAuthWeb.Router do
     get "/", PageController, :index
     post "/login", PageController, :create
     get "/auth/google/callback", GoogleAuthController, :index
+    get "/auth/github/callback", GithubAuthController, :index
     resources "/users", UserController, only: [:new, :create]
   end
 

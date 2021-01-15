@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mix deps.get || exit 1
+
 npm audit fix --prefix ./assets || exit 1
 npm install --prefix ./assets || exit 1
 

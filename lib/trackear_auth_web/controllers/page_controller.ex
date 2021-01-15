@@ -7,15 +7,18 @@ defmodule TrackearAuthWeb.PageController do
 
   def index(conn, _params) do
     oauth_google_url = ElixirAuthGoogle.generate_oauth_url(conn)
+    oauth_github_url = ElixirAuthGithub.login_url()
     changeset = Accounts.change_user(%User{})
     render(conn, "index.html", [
       oauth_google_url: oauth_google_url,
+      oauth_github_url: oauth_github_url,
       changeset: changeset
     ])
   end
 
   def create(conn, %{"user" => user_params}) do
     oauth_google_url = ElixirAuthGoogle.generate_oauth_url(conn)
+    oauth_github_url = ElixirAuthGithub.login_url(%{scopes: ["user", "user:email"]})
     email = user_params["email"]
     password = user_params["password"]
 
@@ -27,6 +30,7 @@ defmodule TrackearAuthWeb.PageController do
       {:error, changeset} ->
         render(conn, "index.html", [
           oauth_google_url: oauth_google_url,
+          oauth_github_url: oauth_github_url,
           changeset: changeset,
         ])
     end
