@@ -29,7 +29,7 @@ defmodule TrackearAuthWeb.GoogleAuthController do
         case Accounts.get_or_create_user_and_return_session(user_params) do
           {:ok, session} ->
             conn
-            |> redirect(external: "https://www.trackear.app/sessions/#{session.token}")
+            |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
 
           {:error, changeset} ->
             conn

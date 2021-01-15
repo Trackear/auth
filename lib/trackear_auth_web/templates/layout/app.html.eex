@@ -14,10 +14,10 @@
       <div style="position: absolute; width: 100%; min-height: 676px; top: -180px; left: 0; z-index: -1; transform: skewY(-10deg); background: linear-gradient(1deg, #4c00ff, #1a202c);"></div>
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <h1 class="text-center text-white font-bold text-2xl mt-16 mb-8 flex items-center justify-center mt-10">
+      <a href="<%= System.get_env("TRACKEAR_URL") %>" class="text-center text-white hover:text-white font-bold text-2xl mt-16 mb-8 flex items-center justify-center mt-10">
         <svg class="mr-2 w-6 text-pink-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         Trackear.app
-      </h1>
+      </a>
       <div class="w-full max-w-md mx-auto bg-white shadow-lg rounded px-8 py-6 mt-4 border">
         <%= @inner_content %>
       </div>

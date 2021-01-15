@@ -18,14 +18,14 @@ defmodule TrackearAuthWeb.PageController do
 
   def create(conn, %{"user" => user_params}) do
     oauth_google_url = ElixirAuthGoogle.generate_oauth_url(conn)
-    oauth_github_url = ElixirAuthGithub.login_url(%{scopes: ["user", "user:email"]})
+    oauth_github_url = ElixirAuthGithub.login_url()
     email = user_params["email"]
     password = user_params["password"]
 
     case Accounts.create_session_from_credentials(email, password) do
       {:ok, session} ->
         conn
-        |> redirect(external: "https://www.trackear.app/sessions/#{session.token}")
+        |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
 
       {:error, changeset} ->
         render(conn, "index.html", [

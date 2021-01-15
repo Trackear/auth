@@ -23,13 +23,13 @@
     <%= error_tag f, :first_name %>
   </div>
 
-  <div class="mt-4 mb-2">
+  <div class="mt-4 mb-4">
     <%= label f, :last_name, "Apellido" %>
     <%= text_input f, :last_name %>
     <%= error_tag f, :last_name %>
   </div>
 
-  <div class="text-center">
+  <div class="text-center mb-4">
     <%= submit "Crear cuenta" %>
   </div>
 <% end %>

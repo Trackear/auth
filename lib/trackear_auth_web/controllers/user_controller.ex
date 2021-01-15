@@ -18,7 +18,7 @@ defmodule TrackearAuthWeb.UserController do
     case Accounts.create_user_and_return_session(user_params) do
       {:ok, session} ->
         conn
-        |> redirect(external: "https://www.trackear.app/sessions/#{session.token}")
+        |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
 
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)

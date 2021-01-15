@@ -20,13 +20,13 @@
         <%= error_tag f, :email %>
     </div>
 
-    <div class="mt-4 mb-2">
+    <div class="mt-4 mb-4">
         <%= label f, :password %>
         <%= password_input f, :password %>
         <%= error_tag f, :password %>
     </div>
 
-    <div class="text-center">
+    <div class="text-center mb-4">
         <%= submit "Ingresar" %>
     </div>
 
