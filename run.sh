@@ -1,14 +1,18 @@
 #!/bin/bash
 
-mix deps.get || exit 1
+# Exit if one of the following
+# commands fail
+set -e
 
-npm audit fix --prefix ./assets || exit 1
-npm install --prefix ./assets || exit 1
+mix deps.get
 
-npm run deploy --prefix ./assets || exit 1
-mix phx.digest priv/static || exit 1
+npm audit fix --prefix ./assets
+npm install --prefix ./assets
 
-mix ecto.create || exit 1
-mix ecto.migrate || exit 1
+npm run deploy --prefix ./assets
+mix phx.digest priv/static
+
+mix ecto.create
+mix ecto.migrate
 
 mix phx.server

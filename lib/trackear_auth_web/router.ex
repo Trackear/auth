@@ -23,10 +23,6 @@ defmodule TrackearAuthWeb.Router do
     resources "/users", UserController, only: [:new, :create]
   end
 
-  if Mix.env == :dev do
-    forward "/sent_emails", Bamboo.SentEmailViewerPlug
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", TrackearAuthWeb do
   #   pipe_through :api
@@ -41,6 +37,8 @@ defmodule TrackearAuthWeb.Router do
   # as long as you are also using SSL (which you should anyway).
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
+
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
 
     scope "/" do
       pipe_through :browser

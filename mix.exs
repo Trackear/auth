@@ -49,7 +49,7 @@ defmodule TrackearAuth.MixProject do
       {:elixir_auth_github, "~> 1.0.3"},
       {:bcrypt_elixir, "~> 2.0"},
       {:bamboo, "~> 1.6"},
-      {:bamboo_smtp, "~> 3.1.0"}
+      {:bamboo_smtp, "~> 3.0.0"}
     ]
   end
 

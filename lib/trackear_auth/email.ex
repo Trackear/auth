@@ -1,13 +1,13 @@
 defmodule TrackearAuth.Email do
   import Bamboo.Email
+  use Bamboo.Phoenix, view: TrackearAuthWeb.EmailView
 
   def welcome_email do
     new_email(
       to: "john@example.com",
-      from: "support@myapp.com",
+      from: System.get_env("EMAIL_FROM"),
       subject: "Welcome to the app.",
-      html_body: "<strong>Thanks for joining!</strong>",
-      text_body: "Thanks for joining!"
     )
+    |> render(:welcome)
   end
 end

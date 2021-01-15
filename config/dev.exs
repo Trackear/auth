@@ -77,4 +77,4 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :bcrypt_elixir, :log_rounds, 11
 
-config :trackear_auth, MyApp.Mailer, adapter: Bamboo.LocalAdapter
+config :trackear_auth, TrackearAuth.Mailer, adapter: Bamboo.LocalAdapter
