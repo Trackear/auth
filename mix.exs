@@ -47,7 +47,9 @@ defmodule TrackearAuth.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:elixir_auth_google, "~> 1.0.3"},
       {:elixir_auth_github, "~> 1.0.3"},
-      {:bcrypt_elixir, "~> 2.0"}
+      {:bcrypt_elixir, "~> 2.0"},
+      {:bamboo, "~> 1.6"},
+      {:bamboo_smtp, "~> 3.1.0"}
     ]
   end
 

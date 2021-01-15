@@ -1,6 +1,8 @@
 defmodule TrackearAuthWeb.PageController do
   use TrackearAuthWeb, :controller
 
+  alias TrackearAuth.Email
+  alias TrackearAuth.Mailer
   alias TrackearAuth.Accounts
   alias TrackearAuth.Accounts.User
   alias TrackearAuth.Accounts.Session
@@ -9,6 +11,10 @@ defmodule TrackearAuthWeb.PageController do
     oauth_google_url = ElixirAuthGoogle.generate_oauth_url(conn)
     oauth_github_url = ElixirAuthGithub.login_url()
     changeset = Accounts.change_user(%User{})
+
+    Email.welcome_email()   # Create your email
+    |> Mailer.deliver_now() # Send your email
+
     render(conn, "index.html", [
       oauth_google_url: oauth_google_url,
       oauth_github_url: oauth_github_url,

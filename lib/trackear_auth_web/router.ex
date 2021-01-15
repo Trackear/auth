@@ -23,6 +23,10 @@ defmodule TrackearAuthWeb.Router do
     resources "/users", UserController, only: [:new, :create]
   end
 
+  if Mix.env == :dev do
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", TrackearAuthWeb do
   #   pipe_through :api

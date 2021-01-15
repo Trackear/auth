@@ -76,3 +76,5 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :bcrypt_elixir, :log_rounds, 11
+
+config :trackear_auth, MyApp.Mailer, adapter: Bamboo.LocalAdapter
