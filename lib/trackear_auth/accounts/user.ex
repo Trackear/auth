@@ -14,7 +14,7 @@ defmodule TrackearAuth.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :password, :first_name, :last_name])
-    |> validate_required([:email, :password, :first_name, :last_name])
+    |> validate_required([:email, :password, :first_name])
     |> validate_format(:email, ~r/@/)
     |> add_encrypted_password
   end

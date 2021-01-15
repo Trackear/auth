@@ -203,6 +203,9 @@ defmodule TrackearAuth.Accounts do
       iex> get_or_create_user_and_return_session(%{email: "foo@email.com"})
       {:ok, %Session{}}
 
+      iex> get_or_create_user_and_return_session(%{email: "new-user@email.com"})
+      {:new_user, :ok, %Session{}}
+
       iex> get_or_create_user_and_return_session(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
@@ -212,7 +215,12 @@ defmodule TrackearAuth.Accounts do
       %User{} = user ->
         create_session(%{ user_id: user.id })
       nil ->
-        create_user_and_return_session(attrs)
+        case create_user_and_return_session(attrs) do
+          {:ok, session} ->
+            {:new_user, :ok, session}
+          {:error, changeset} ->
+            {:error, changeset}
+        end
     end
   end
 

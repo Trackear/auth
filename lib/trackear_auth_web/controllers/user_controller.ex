@@ -1,6 +1,8 @@
 defmodule TrackearAuthWeb.UserController do
   use TrackearAuthWeb, :controller
 
+  alias TrackearAuth.Email
+  alias TrackearAuth.Mailer
   alias TrackearAuth.Accounts
   alias TrackearAuth.Accounts.User
 
@@ -17,6 +19,9 @@ defmodule TrackearAuthWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user_and_return_session(user_params) do
       {:ok, session} ->
+        Email.welcome_email(conn, user_params["email"])
+        |> Mailer.deliver_later()
+
         conn
         |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
 

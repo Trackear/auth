@@ -1,1 +1,11 @@
-Hola
+Trackear.app
+
+¡Bienvenido a Trackear.app!
+
+Ya podes crear tu proyecto y comenzar a registrar tu tiempo trabajado.
+
+Creá tu proyecto en <%= System.get_env("TRACKEAR_URL") %>.
+
+PRO TIP: Cuando crees un proyecto, podés invitar a todo tu equipo.
+
+Si tenés dudas, comentarios, o simplemente necesitás ayuda, no dudes en escribirnos a soporte@trackear.app.

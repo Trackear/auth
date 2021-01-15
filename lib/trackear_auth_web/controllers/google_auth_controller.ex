@@ -1,6 +1,8 @@
 defmodule TrackearAuthWeb.GoogleAuthController do
   use TrackearAuthWeb, :controller
 
+  alias TrackearAuth.Email
+  alias TrackearAuth.Mailer
   alias TrackearAuth.Accounts
   alias TrackearAuth.Accounts.User
 
@@ -27,19 +29,26 @@ defmodule TrackearAuthWeb.GoogleAuthController do
         }
 
         case Accounts.get_or_create_user_and_return_session(user_params) do
+          {:new_user, :ok, session} ->
+            Email.welcome_email(conn, profile.email)
+            |> Mailer.deliver_later()
+
+            conn
+            |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
+
           {:ok, session} ->
             conn
             |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
 
           {:error, changeset} ->
             conn
-            |> put_flash(:info, "Hubo problemas al ingresar con tu cuenta de Google.")
+            |> put_flash(:info, "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo.")
             |> redirect(to: Routes.page_path(conn, :index))
         end
 
       _ ->
         conn
-        |> put_flash(:info, "Hubo problemas al ingresar con tu cuenta de Google.")
+        |> put_flash(:info, "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo.")
         |> redirect(to: Routes.page_path(conn, :index))
     end
   end
