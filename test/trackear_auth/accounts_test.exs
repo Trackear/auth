@@ -6,8 +6,18 @@ defmodule TrackearAuth.AccountsTest do
   describe "users" do
     alias TrackearAuth.Accounts.User
 
-    @valid_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name", password: "some password"}
-    @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", password: "some updated password"}
+    @valid_attrs %{
+      email: "some email",
+      first_name: "some first_name",
+      last_name: "some last_name",
+      password: "some password"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      first_name: "some updated first_name",
+      last_name: "some updated last_name",
+      password: "some updated password"
+    }
     @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do

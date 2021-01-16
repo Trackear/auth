@@ -17,15 +17,17 @@ defmodule TrackearAuthWeb.GoogleAuthController do
         {:ok, profile} = ElixirAuthGoogle.get_user_profile(access_token)
 
         password_length = 32
-        password = :crypto.strong_rand_bytes(password_length)
-        |> Base.encode64
-        |> binary_part(0, password_length)
+
+        password =
+          :crypto.strong_rand_bytes(password_length)
+          |> Base.encode64()
+          |> binary_part(0, password_length)
 
         user_params = %{
           email: profile.email,
           first_name: profile.given_name,
           last_name: profile.family_name,
-          password: password,
+          password: password
         }
 
         case Accounts.get_or_create_user_and_return_session(user_params) do
@@ -42,13 +44,19 @@ defmodule TrackearAuthWeb.GoogleAuthController do
 
           {:error, changeset} ->
             conn
-            |> put_flash(:info, "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo.")
+            |> put_flash(
+              :info,
+              "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo."
+            )
             |> redirect(to: Routes.page_path(conn, :index))
         end
 
       _ ->
         conn
-        |> put_flash(:info, "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo.")
+        |> put_flash(
+          :info,
+          "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo."
+        )
         |> redirect(to: Routes.page_path(conn, :index))
     end
   end

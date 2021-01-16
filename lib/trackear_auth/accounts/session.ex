@@ -20,9 +20,10 @@ defmodule TrackearAuth.Accounts.Session do
   defp set_token(changeset) do
     token_length = 128
 
-    token = :crypto.strong_rand_bytes(token_length)
-    |> Base.encode64
-    |> binary_part(0, token_length)
+    token =
+      :crypto.strong_rand_bytes(token_length)
+      |> Base.encode64()
+      |> binary_part(0, token_length)
 
     changeset
     |> put_change(:token, token)

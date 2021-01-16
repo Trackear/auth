@@ -20,7 +20,9 @@ defmodule TrackearAuthWeb.Router do
     post "/login", PageController, :create
     get "/auth/google/callback", GoogleAuthController, :index
     get "/auth/github/callback", GithubAuthController, :index
-    resources "/users", UserController, only: [:new, :create]
+    # , only: [:new, :create]
+    resources "/users", UserController
+    resources "/sessions", SessionController
   end
 
   # Other scopes may use custom stacks.

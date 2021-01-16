@@ -5,8 +5,18 @@ defmodule TrackearAuthWeb.UserLiveTest do
 
   alias TrackearAuth.Accounts
 
-  @create_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name", password: "some password"}
-  @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", password: "some updated password"}
+  @create_attrs %{
+    email: "some email",
+    first_name: "some first_name",
+    last_name: "some last_name",
+    password: "some password"
+  }
+  @update_attrs %{
+    email: "some updated email",
+    first_name: "some updated first_name",
+    last_name: "some updated last_name",
+    password: "some updated password"
+  }
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
 
   defp fixture(:user) do

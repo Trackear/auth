@@ -10,11 +10,11 @@ defmodule TrackearAuthWeb.PageController do
     oauth_github_url = ElixirAuthGithub.login_url()
     changeset = Accounts.change_user(%User{})
 
-    render(conn, "index.html", [
+    render(conn, "index.html",
       oauth_google_url: oauth_google_url,
       oauth_github_url: oauth_github_url,
       changeset: changeset
-    ])
+    )
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -29,11 +29,11 @@ defmodule TrackearAuthWeb.PageController do
         |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
 
       {:error, changeset} ->
-        render(conn, "index.html", [
+        render(conn, "index.html",
           oauth_google_url: oauth_google_url,
           oauth_github_url: oauth_github_url,
-          changeset: changeset,
-        ])
+          changeset: changeset
+        )
     end
   end
 end

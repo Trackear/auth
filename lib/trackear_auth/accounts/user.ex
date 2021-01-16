@@ -24,6 +24,7 @@ defmodule TrackearAuth.Accounts.User do
     if Map.has_key?(changeset.changes, :password) do
       password = changeset.changes.password
       encrypted_password = Bcrypt.hash_pwd_salt(password)
+
       changeset
       |> put_change(:encrypted_password, encrypted_password)
     else

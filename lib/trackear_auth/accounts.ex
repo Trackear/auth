@@ -55,6 +55,7 @@ defmodule TrackearAuth.Accounts do
       %User{} = user ->
         matches = Bcrypt.verify_pass(password, user.encrypted_password)
         if matches, do: {:ok, user}, else: {:error, :invalid_credentials}
+
       nil ->
         {:error, :invalid_credentials}
     end
@@ -187,7 +188,8 @@ defmodule TrackearAuth.Accounts do
   def create_user_and_return_session(attrs \\ %{}) do
     case create_user(attrs) do
       {:ok, user} ->
-        create_session(%{ user_id: user.id })
+        create_session(%{user_id: user.id})
+
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -213,11 +215,13 @@ defmodule TrackearAuth.Accounts do
   def get_or_create_user_and_return_session(attrs \\ %{}) do
     case Repo.get_by(User, email: attrs.email) do
       %User{} = user ->
-        create_session(%{ user_id: user.id })
+        create_session(%{user_id: user.id})
+
       nil ->
         case create_user_and_return_session(attrs) do
           {:ok, session} ->
             {:new_user, :ok, session}
+
           {:error, changeset} ->
             {:error, changeset}
         end
@@ -239,7 +243,8 @@ defmodule TrackearAuth.Accounts do
   def create_session_from_credentials(email, password) do
     case get_user_from_credentials(email, password) do
       {:ok, %User{} = user} ->
-        create_session(%{ user_id: user.id })
+        create_session(%{user_id: user.id})
+
       {:error, _} ->
         change_user(%User{}, %{email: email, password: password})
         |> Ecto.Changeset.add_error(:base, "Invalid credentials")

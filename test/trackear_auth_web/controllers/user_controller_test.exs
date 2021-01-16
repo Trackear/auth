@@ -3,8 +3,18 @@ defmodule TrackearAuthWeb.UserControllerTest do
 
   alias TrackearAuth.Accounts
 
-  @create_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name", password: "some password"}
-  @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", password: "some updated password"}
+  @create_attrs %{
+    email: "some email",
+    first_name: "some first_name",
+    last_name: "some last_name",
+    password: "some password"
+  }
+  @update_attrs %{
+    email: "some updated email",
+    first_name: "some updated first_name",
+    last_name: "some updated last_name",
+    password: "some updated password"
+  }
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil}
 
   def fixture(:user) do
@@ -75,6 +85,7 @@ defmodule TrackearAuthWeb.UserControllerTest do
     test "deletes chosen user", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.user_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.user_path(conn, :show, user))
       end
