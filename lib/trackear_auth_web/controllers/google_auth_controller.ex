@@ -10,53 +10,47 @@ defmodule TrackearAuthWeb.GoogleAuthController do
   `index/2` handles the callback from Google Auth API redirect.
   """
   def index(conn, %{"code" => code}) do
-    {:ok, token} = ElixirAuthGoogle.get_token(code, conn)
+    err_msg = "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo."
+    session_path = "#{System.get_env("TRACKEAR_URL")}/sessions"
 
-    case token do
-      %{access_token: access_token} ->
-        {:ok, profile} = ElixirAuthGoogle.get_user_profile(access_token)
+    password_length = 32
 
-        password_length = 32
+    password =
+      :crypto.strong_rand_bytes(password_length)
+      |> Base.encode64()
+      |> binary_part(0, password_length)
 
-        password =
-          :crypto.strong_rand_bytes(password_length)
-          |> Base.encode64()
-          |> binary_part(0, password_length)
+    with {:ok, token} <- ElixirAuthGoogle.get_token(code, conn),
+         %{access_token: access_token} <- token,
+         {:ok, profile} <- ElixirAuthGoogle.get_user_profile(access_token) do
+      user_params = %{
+        email: profile.email,
+        first_name: profile.given_name,
+        last_name: profile.family_name,
+        password: password
+      }
 
-        user_params = %{
-          email: profile.email,
-          first_name: profile.given_name,
-          last_name: profile.family_name,
-          password: password
-        }
+      case Accounts.get_or_create_user_and_return_session(user_params) do
+        {:new_user, :ok, session} ->
+          Email.welcome_email(conn, profile.email)
+          |> Mailer.deliver_later()
 
-        case Accounts.get_or_create_user_and_return_session(user_params) do
-          {:new_user, :ok, session} ->
-            Email.welcome_email(conn, profile.email)
-            |> Mailer.deliver_later()
+          conn
+          |> redirect(external: "#{session_path}/#{session.token}")
 
-            conn
-            |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
+        {:ok, session} ->
+          conn
+          |> redirect(external: "#{session_path}/#{session.token}")
 
-          {:ok, session} ->
-            conn
-            |> redirect(external: "#{System.get_env("TRACKEAR_URL")}/sessions/#{session.token}")
-
-          {:error, changeset} ->
-            conn
-            |> put_flash(
-              :info,
-              "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo."
-            )
-            |> redirect(to: Routes.page_path(conn, :index))
-        end
-
-      _ ->
+        _ ->
+          conn
+          |> put_flash(:info, err_msg)
+          |> redirect(to: Routes.page_path(conn, :index))
+      end
+    else
+      :error ->
         conn
-        |> put_flash(
-          :info,
-          "Hubo problemas al ingresar con tu cuenta de Google. Por favor intentalo de nuevo."
-        )
+        |> put_flash(:info, err_msg)
         |> redirect(to: Routes.page_path(conn, :index))
     end
   end

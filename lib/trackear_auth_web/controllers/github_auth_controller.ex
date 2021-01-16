@@ -25,18 +25,26 @@ defmodule TrackearAuthWeb.GithubAuthController do
          user_params = %{email: email, first_name: name, password: password} do
       case Accounts.get_or_create_user_and_return_session(user_params) do
         {:new_user, :ok, session} ->
-          Email.welcome_email(conn, email) |> Mailer.deliver_later()
-          conn |> redirect(external: "#{session_path}/#{session.token}")
+          Email.welcome_email(conn, email)
+          |> Mailer.deliver_later()
+
+          conn
+          |> redirect(external: "#{session_path}/#{session.token}")
 
         {:ok, session} ->
-          conn |> redirect(external: "#{session_path}/#{session.token}")
+          conn
+          |> redirect(external: "#{session_path}/#{session.token}")
 
         _ ->
-          conn |> put_flash(:info, err_msg) |> redirect(to: Routes.page_path(conn, :index))
+          conn
+          |> put_flash(:info, err_msg)
+          |> redirect(to: Routes.page_path(conn, :index))
       end
     else
       :error ->
-        conn |> put_flash(:info, err_msg) |> redirect(to: Routes.page_path(conn, :index))
+        conn
+        |> put_flash(:info, err_msg)
+        |> redirect(to: Routes.page_path(conn, :index))
     end
   end
 end
