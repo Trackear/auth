@@ -13,16 +13,12 @@ defmodule TrackearAuthWeb.GithubAuthController do
     err_msg = "Hubo problemas al ingresar con tu cuenta de Github. Por favor intentalo de nuevo."
     session_path = "#{System.get_env("TRACKEAR_URL")}/sessions"
 
-    password_length = 32
-
-    password =
-      :crypto.strong_rand_bytes(password_length)
-      |> Base.encode64()
-      |> binary_part(0, password_length)
-
     with {:ok, profile} <- ElixirAuthGithub.github_auth(code),
-         %{email: email, name: name} <- profile,
-         user_params = %{email: email, first_name: name, password: password} do
+         %{email: email, name: name} <- profile do
+      user_params = %{
+        email: email,
+        first_name: name
+      }
       case Accounts.get_or_create_user_and_return_session(user_params) do
         {:new_user, :ok, session} ->
           Email.welcome_email(conn, email)
@@ -41,7 +37,7 @@ defmodule TrackearAuthWeb.GithubAuthController do
           |> redirect(to: Routes.page_path(conn, :index))
       end
     else
-      :error ->
+      _ ->
         conn
         |> put_flash(:info, err_msg)
         |> redirect(to: Routes.page_path(conn, :index))

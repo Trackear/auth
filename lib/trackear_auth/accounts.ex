@@ -218,7 +218,18 @@ defmodule TrackearAuth.Accounts do
         create_session(%{user_id: user.id})
 
       nil ->
-        case create_user_and_return_session(attrs) do
+        password_length = 32
+
+        password =
+          :crypto.strong_rand_bytes(password_length)
+          |> Base.encode64()
+          |> binary_part(0, password_length)
+
+        attrs_with_password =
+          attrs
+          |> Map.put(:password, password)
+
+        case create_user_and_return_session(attrs_with_password) do
           {:ok, session} ->
             {:new_user, :ok, session}
 
