@@ -11,6 +11,28 @@ Project to handle accounts and sessions creation for Trackear.app.
 - Run docker-compose up
 - Once completed, the app will be running on http://localhost:4000
 
+## Environment variables
+
+- **TRACKEAR_URL:** Full URL of the main page
+- **GOOGLE_CLIENT_ID:** Client ID from Google
+- **GOOGLE_CLIENT_SECRET:** Client secret from Google
+- **GITHUB_CLIENT_ID:** Client ID from Github
+- **GITHUB_CLIENT_SECRET:** Client secret from Github
+- **EMAIL_FROM: Email** address from where emails will be sent
+- **PADDLE_SECRET:** Secret used in Paddle webhook URL.
+
+## Paddle webhook
+
+The Paddle webhook, is the endpoint that will be called from Paddle when
+a new subscription is created. It can be configured from https://vendors.paddle.com/alerts-webhooks.
+
+You can use the `PADDLE_SECRET` adding it as a query parameter. For example:
+
+`URL for receiving webhook alerts: https://your-page.com/paddle/webhook?secret=YOUR_SECRET`
+
+This way, if the secret doesn't match, the endpoint won't do anything and we can
+be fairly confident that the endpoint, is being called by Paddle.
+
 ## Linter
 
 `mix credo`
