@@ -1,0 +1,48 @@
+<h1>Listing Pay subscriptions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Owner type</th>
+      <th>Owner</th>
+      <th>Name</th>
+      <th>Processor</th>
+      <th>Processor</th>
+      <th>Processor plan</th>
+      <th>Quantity</th>
+      <th>Trial ends at</th>
+      <th>Ends at</th>
+      <th>Status</th>
+      <th>Update url</th>
+      <th>Cancel url</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for subscription <- @pay_subscriptions do %>
+    <tr>
+      <td><%= subscription.owner_type %></td>
+      <td><%= subscription.owner_id %></td>
+      <td><%= subscription.name %></td>
+      <td><%= subscription.processor %></td>
+      <td><%= subscription.processor_id %></td>
+      <td><%= subscription.processor_plan %></td>
+      <td><%= subscription.quantity %></td>
+      <td><%= subscription.trial_ends_at %></td>
+      <td><%= subscription.ends_at %></td>
+      <td><%= subscription.status %></td>
+      <td><%= subscription.update_url %></td>
+      <td><%= subscription.cancel_url %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.subscription_path(@conn, :show, subscription) %></span>
+        <span><%= link "Edit", to: Routes.subscription_path(@conn, :edit, subscription) %></span>
+        <span><%= link "Delete", to: Routes.subscription_path(@conn, :delete, subscription), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Subscription", to: Routes.subscription_path(@conn, :new) %></span>

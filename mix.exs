@@ -50,7 +50,8 @@ defmodule TrackearAuth.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:bamboo, "~> 1.6"},
       {:bamboo_smtp, "~> 3.0.0"},
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:poison, "~> 4.0.1"}
     ]
   end
 

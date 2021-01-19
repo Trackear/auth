@@ -19,6 +19,7 @@ defmodule TrackearAuthWeb.GithubAuthController do
         email: email,
         first_name: name
       }
+
       case Accounts.get_or_create_user_and_return_session(user_params) do
         {:new_user, :ok, session} ->
           Email.welcome_email(conn, email)

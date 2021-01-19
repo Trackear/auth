@@ -25,10 +25,11 @@ defmodule TrackearAuthWeb.Router do
     resources "/sessions", SessionController
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TrackearAuthWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TrackearAuthWeb do
+    pipe_through :api
+
+    post "/paddle/webhook", PaddleController, :webhook
+  end
 
   # Enables LiveDashboard only for development
   #
