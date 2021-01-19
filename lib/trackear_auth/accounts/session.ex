@@ -5,8 +5,10 @@ defmodule TrackearAuth.Accounts.Session do
   schema "sessions" do
     field :token, :string
     field :user_id, :id
+    field :created_at, :naive_datetime
+    field :updated_at, :naive_datetime
 
-    timestamps()
+    # timestamps()
   end
 
   @doc false
@@ -14,7 +16,17 @@ defmodule TrackearAuth.Accounts.Session do
     session
     |> cast(attrs, [:user_id])
     |> validate_required([:user_id])
-    |> set_token
+    |> set_ruby_timestamp()
+    |> set_token()
+  end
+
+  defp set_ruby_timestamp(changeset) do
+    today = NaiveDateTime.utc_now()
+    |> NaiveDateTime.truncate(:second)
+
+    changeset
+    |> put_change(:created_at, today)
+    |> put_change(:updated_at, today)
   end
 
   defp set_token(changeset) do
@@ -23,7 +35,7 @@ defmodule TrackearAuth.Accounts.Session do
     token =
       :crypto.strong_rand_bytes(token_length)
       |> Base.encode64()
-      |> binary_part(0, token_length)
+      |> String.replace("/", "-")
 
     changeset
     |> put_change(:token, token)

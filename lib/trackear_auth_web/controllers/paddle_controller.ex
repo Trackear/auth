@@ -24,6 +24,9 @@ defmodule TrackearAuthWeb.PaddleController do
       # If secret doesn't match, fail loudly!
       true = System.get_env("PADDLE_SECRET") == secret
 
+      today = NaiveDateTime.utc_now()
+      |> NaiveDateTime.truncate(:second)
+
       changeset = %{
         owner_type: "User",
         owner_id: owner_id,
@@ -33,8 +36,8 @@ defmodule TrackearAuthWeb.PaddleController do
         processor_plan: subscription_plan_id,
         quantity: 1,
         ends_at: next_bill_date_parsed,
-        created_at: DateTime.utc_now(),
-        updated_at: DateTime.utc_now(),
+        created_at: today,
+        updated_at: today,
         status: status,
         update_url: update_url,
         cancel_url: cancel_url
