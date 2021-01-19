@@ -20,9 +20,13 @@ defmodule TrackearAuthWeb.Router do
     post "/login", PageController, :create
     get "/auth/google/callback", GoogleAuthController, :index
     get "/auth/github/callback", GithubAuthController, :index
-    # , only: [:new, :create]
-    resources "/users", UserController
-    resources "/sessions", SessionController
+
+    if Mix.env() in [:dev, :test] do
+      resources "/users", UserController
+      resources "/sessions", SessionController
+    else
+      resources "/users", UserController, only: [:new, :create]
+    end
   end
 
   scope "/api", TrackearAuthWeb do
