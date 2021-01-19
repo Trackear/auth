@@ -34,8 +34,10 @@
         <div class="text-center">
             ¿Sos nuevo? <%= link "Crear cuenta", to: Routes.user_path(@conn, :new) %>
         </div>
+        <!--
         <div class="text-center">
             ¿Perdiste tu contraseña? <%= link "Recuperar contraseña", to: "/" %>
         </div>
+        -->
     </div>
 <% end %>
