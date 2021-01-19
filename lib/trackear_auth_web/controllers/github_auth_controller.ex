@@ -14,10 +14,11 @@ defmodule TrackearAuthWeb.GithubAuthController do
     session_path = "#{System.get_env("TRACKEAR_URL")}/sessions"
 
     with {:ok, profile} <- ElixirAuthGithub.github_auth(code),
-         %{email: email, name: name} <- profile do
+         %{email: email, name: name, avatar_url: avatar_url} <- profile do
       user_params = %{
         email: email,
-        first_name: name
+        first_name: name,
+        picture: avatar_url
       }
 
       case Accounts.get_or_create_user_and_return_session(user_params) do

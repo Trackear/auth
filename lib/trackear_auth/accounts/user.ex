@@ -8,15 +8,29 @@ defmodule TrackearAuth.Accounts.User do
     field :encrypted_password, :string
     field :first_name, :string
     field :last_name, :string
+    field :picture, :string
+    field :created_at, :naive_datetime
+    field :updated_at, :naive_datetime
   end
 
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :first_name, :last_name])
+    |> cast(attrs, [:email, :password, :first_name, :last_name, :picture])
     |> validate_required([:email, :password, :first_name])
     |> validate_format(:email, ~r/@/)
-    |> add_encrypted_password
+    |> set_ruby_timestamps()
+    |> add_encrypted_password()
+  end
+
+  @doc false
+  defp set_ruby_timestamps(changeset) do
+    today = NaiveDateTime.utc_now()
+    |> NaiveDateTime.truncate(:second)
+
+    changeset
+    |> put_change(:created_at, today)
+    |> put_change(:updated_at, today)
   end
 
   @doc false

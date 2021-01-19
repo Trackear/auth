@@ -19,7 +19,8 @@ defmodule TrackearAuthWeb.GoogleAuthController do
       user_params = %{
         email: profile.email,
         first_name: profile.given_name,
-        last_name: profile.family_name
+        last_name: profile.family_name,
+        picture: profile.picture
       }
 
       case Accounts.get_or_create_user_and_return_session(user_params) do
