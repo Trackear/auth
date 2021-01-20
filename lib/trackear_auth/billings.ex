@@ -38,7 +38,11 @@ defmodule TrackearAuth.Billings do
   def get_subscription!(id), do: Repo.get!(Subscription, id)
 
   @doc """
-  Gets a subscription from Paddle.
+  Gets a subscription from Paddle by using the service
+  api/2.0/subscription/users. Only the first result from response will
+  be returned (there shouldn't be more than one with the same id)
+
+  See https://developer.paddle.com/api-reference/subscription-api/users/listusers
 
   ## Examples
 
@@ -57,12 +61,49 @@ defmodule TrackearAuth.Billings do
       subscription_id: id
     }
 
-    case HTTPoison.post(paddle_service, payload) do
-      {:ok, response} ->
-        response.body
+    with response <- HTTPoison.post(paddle_service, Poison.encode!(payload)),
+    {:ok, %HTTPoison.Response{status_code: 200, body: body}} <- response,
+    {:ok, response} <- Poison.decode(body),
+    %{"response" => response} <- response,
+    subscription <- List.first(response) do
+      subscription
+    else
       _ ->
         nil
     end
+  end
+
+  @doc """
+  Create a subscription from calling Paddle's api/2.0/subscription/users
+  service. paddle_attrs must be one of the elements returned in the response
+  array.
+
+  See https://developer.paddle.com/api-reference/subscription-api/users/listusers
+
+  ## Examples
+
+      iex> create_subscription_from_paddle(owner_id, %{response from service})
+      %{:ok, %Subscription{}}
+
+      iex> create_subscription_from_paddle(owner_id, %{invalid})
+      %{:error, %Changeset{}}
+
+  """
+  def create_subscription_from_paddle(owner_id, paddle_attrs \\ %{}) do
+    {:ok, next_bill_date_parsed} = NaiveDateTime.from_iso8601(
+      paddle_attrs.next_payment.date <> " 00:00:00"
+    )
+
+    create_paddle_subscription(%{
+      owner_id: owner_id,
+      processor_id: paddle_attrs.subscription_id,
+      processor_plan: paddle_attrs.plan_id,
+      quantity: paddle_attrs.quantity,
+      ends_at: next_bill_date_parsed,
+      status: paddle_attrs.status,
+      update_url: paddle_attrs.update_url,
+      cancel_url: paddle_attrs.cancel_url
+    })
   end
 
   @doc """
@@ -72,22 +113,24 @@ defmodule TrackearAuth.Billings do
 
   ## Examples
 
-      iex> get_paddle_subscription_or_recreate_from_paddle(%{subscription_id: 42})
+      iex> get_paddle_subscription_or_recreate_from_paddle(%{processor_id: 42})
       %Subscription{}
 
-      iex> get_paddle_subscription_or_recreate_from_paddle(%{subscription_id: 24})
+      iex> get_paddle_subscription_or_recreate_from_paddle(%{processor_id: 24})
       nil
 
   """
   def get_paddle_subscription_or_recreate_from_paddle(attrs \\ %{}) do
-    id = attrs.subscription_id
+    id = attrs.processor_id
+    owner_id = attrs.owner_id
     filters = [processor_id: id, processor: "paddle"]
+
     case Repo.get_by(Subscription, filters) do
       %Subscription{} = subscription ->
         subscription
       nil ->
         with %{} = paddle_subscription <- get_subscription_from_paddle(id),
-        {:ok, subscription} <- create_paddle_subscription(paddle_subscription) do
+        {:ok, subscription} <- create_subscription_from_paddle(owner_id, paddle_subscription) do
           subscription
         else
           _ ->
@@ -207,5 +250,120 @@ defmodule TrackearAuth.Billings do
   """
   def change_subscription(%Subscription{} = subscription, attrs \\ %{}) do
     Subscription.changeset(subscription, attrs)
+  end
+
+  alias TrackearAuth.Billings.Charge
+
+  @doc """
+  Returns the list of pay_charges.
+
+  ## Examples
+
+      iex> list_pay_charges()
+      [%Charge{}, ...]
+
+  """
+  def list_pay_charges do
+    Repo.all(Charge)
+  end
+
+  @doc """
+  Gets a single charge.
+
+  Raises `Ecto.NoResultsError` if the Charge does not exist.
+
+  ## Examples
+
+      iex> get_charge!(123)
+      %Charge{}
+
+      iex> get_charge!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_charge!(id), do: Repo.get!(Charge, id)
+
+  @doc """
+  Creates a charge.
+
+  ## Examples
+
+      iex> create_charge(%{field: value})
+      {:ok, %Charge{}}
+
+      iex> create_charge(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_charge(attrs \\ %{}) do
+    %Charge{}
+    |> Charge.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a Paddle charge.
+
+  ## Examples
+
+      iex> create_charge(%{field: value})
+      {:ok, %Charge{}}
+
+      iex> create_charge(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_paddle_charge(attrs \\ %{}) do
+    attrs_with_paddle = attrs
+    |> Map.put(:processor, "paddle")
+    |> Map.put(:owner_type, "User")
+    create_charge(attrs_with_paddle)
+  end
+
+  @doc """
+  Updates a charge.
+
+  ## Examples
+
+      iex> update_charge(charge, %{field: new_value})
+      {:ok, %Charge{}}
+
+      iex> update_charge(charge, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_charge(%Charge{} = charge, attrs) do
+    charge
+    |> Charge.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a charge.
+
+  ## Examples
+
+      iex> delete_charge(charge)
+      {:ok, %Charge{}}
+
+      iex> delete_charge(charge)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_charge(%Charge{} = charge) do
+    Repo.delete(charge)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking charge changes.
+
+  ## Examples
+
+      iex> change_charge(charge)
+      %Ecto.Changeset{data: %Charge{}}
+
+  """
+  def change_charge(%Charge{} = charge, attrs \\ %{}) do
+    Charge.changeset(charge, attrs)
   end
 end

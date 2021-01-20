@@ -15,6 +15,8 @@ defmodule TrackearAuth.Billings.Subscription do
     field :status, :string
     field :trial_ends_at, :naive_datetime
     field :update_url, :string
+    field :created_at, :naive_datetime
+    field :updated_at, :naive_datetime
 
     # timestamps()
   end
@@ -28,7 +30,7 @@ defmodule TrackearAuth.Billings.Subscription do
   end
 
   @doc false
-  defp set_ruby_timestamp() do
+  defp set_ruby_timestamp(changeset) do
     today = NaiveDateTime.utc_now()
     |> NaiveDateTime.truncate(:second)
 
