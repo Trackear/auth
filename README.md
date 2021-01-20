@@ -33,6 +33,14 @@ You can use the `PADDLE_SECRET` adding it as a query parameter. For example:
 This way, if the secret doesn't match, the endpoint won't do anything and we can
 be fairly confident that the endpoint, is being called by Paddle.
 
+## Interactive console
+
+`iex -S mix`
+
+or
+
+`docker-compose exec app iex -S mix`
+
 ## Linter
 
 `mix credo`

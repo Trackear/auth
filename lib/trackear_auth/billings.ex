@@ -60,8 +60,10 @@ defmodule TrackearAuth.Billings do
       vendor_auth_code: System.get_env("PADDLE_VENDOR_AUTH_CODE"),
       subscription_id: id
     }
+    encode_payload = URI.encode_query(payload)
+    headers = %{"Content-Type" => "application/x-www-form-urlencoded"}
 
-    with response <- HTTPoison.post(paddle_service, Poison.encode!(payload)),
+    with response <- HTTPoison.post(paddle_service, encode_payload, headers),
     {:ok, %HTTPoison.Response{status_code: 200, body: body}} <- response,
     {:ok, response} <- Poison.decode(body),
     %{"response" => response} <- response,
@@ -90,20 +92,21 @@ defmodule TrackearAuth.Billings do
 
   """
   def create_subscription_from_paddle(owner_id, paddle_attrs \\ %{}) do
-    {:ok, next_bill_date_parsed} = NaiveDateTime.from_iso8601(
-      paddle_attrs.next_payment.date <> " 00:00:00"
-    )
-
-    create_paddle_subscription(%{
+    %{"next_payment" => next_payment} = paddle_attrs
+    %{"date" => date} = next_payment
+    {:ok, next_bill_date_parsed} = NaiveDateTime.from_iso8601(date <> " 00:00:00")
+    changeset = %{
       owner_id: owner_id,
-      processor_id: paddle_attrs.subscription_id,
-      processor_plan: paddle_attrs.plan_id,
-      quantity: paddle_attrs.quantity,
+      processor_id: paddle_attrs["subscription_id"] |> to_string,
+      processor_plan: paddle_attrs["plan_id"] |> to_string,
+      quantity: paddle_attrs["quantity"] || 1,
       ends_at: next_bill_date_parsed,
-      status: paddle_attrs.status,
-      update_url: paddle_attrs.update_url,
-      cancel_url: paddle_attrs.cancel_url
-    })
+      status: paddle_attrs["state"],
+      update_url: paddle_attrs["update_url"],
+      cancel_url: paddle_attrs["cancel_url"]
+    }
+
+    create_paddle_subscription(changeset)
   end
 
   @doc """
