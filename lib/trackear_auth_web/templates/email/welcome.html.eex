@@ -61,7 +61,7 @@
     </h1>
     <div style="background-color: white; width: 600px; margin: 0 auto; border-radius: 5px; box-shadow: 0 5px 10px #0000001a; padding: 30px;">
         <div style="text-align: center;">
-            <img src="<%= Routes.static_path(@conn, "/images/welcome.png") %>" width="128" />
+            <img src="<%= Routes.static_url(@conn, "/images/welcome.png") %>" width="128" />
         </div>
         <h2 style="text-align: center;">¡Bienvenido a Trackear.app!</h2>
         <p style="text-align: center;">Ya podes crear tu proyecto y comenzar a registrar tu tiempo trabajado.</p>
