@@ -3,7 +3,6 @@ defmodule TrackearAuthWeb.PageController do
 
   alias TrackearAuth.Accounts
   alias TrackearAuth.Accounts.User
-  alias TrackearAuth.Accounts.Session
 
   def index(conn, _params) do
     oauth_google_url = ElixirAuthGoogle.generate_oauth_url(conn)

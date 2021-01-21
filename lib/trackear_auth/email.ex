@@ -5,7 +5,7 @@ defmodule TrackearAuth.Email do
   def welcome_email(conn, email) do
     new_email(
       to: email,
-      from: System.get_env("EMAIL_FROM"),
+      from: System.get_env("MAILGUN_EMAIL"),
       subject: "Bienvenido a Trackear.app"
     )
     |> render(:welcome, conn: conn)

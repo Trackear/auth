@@ -4,7 +4,6 @@ defmodule TrackearAuthWeb.GithubAuthController do
   alias TrackearAuth.Email
   alias TrackearAuth.Mailer
   alias TrackearAuth.Accounts
-  alias TrackearAuth.Accounts.User
 
   @doc """
   `index/2` handles the callback from Github Auth API redirect.
