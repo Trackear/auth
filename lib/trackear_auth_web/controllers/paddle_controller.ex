@@ -62,6 +62,53 @@ defmodule TrackearAuthWeb.PaddleController do
     end
   end
 
+  def webhook(conn, %{
+    "alert_name"            => alert_name,
+    "passthrough"           => passthrough,
+    "cancel_url"            => cancel_url,
+    "update_url"            => update_url,
+    "next_bill_date"        => next_bill_date,
+    "status"                => status,
+    "subscription_id"       => subscription_id,
+    "subscription_plan_id"  => subscription_plan_id,
+    "new_quantity"          => new_quantity
+  })
+  when alert_name == "subscription_updated"
+  do
+    # Get subscriber from passthrough
+    # See first webhook definition for documentation on owner_id & passthrough
+    with {:ok, %{"owner_id" => owner_id}} <- Poison.decode(passthrough),
+         # Parse the next billing date
+         {:ok, next_bill_date_parsed} <- NaiveDateTime.from_iso8601(next_bill_date <> " 00:00:00"),
+         # Get query params from URL
+         %{query_params: params} <- fetch_query_params(conn),
+         # Get the secret parameter to make sure it matches the one
+         # we configured on .env -> PADDLE_SECRET
+         %{"secret" => secret} <- params
+    do
+      # Fails and terminates execution if it doesn't match
+      true = System.get_env("PADDLE_SECRET") == secret
+
+      changeset = %{
+        owner_id: owner_id,
+        processor_id: subscription_id,
+        processor_plan: subscription_plan_id,
+        quantity: new_quantity,
+        ends_at: next_bill_date_parsed,
+        status: status,
+        update_url: update_url,
+        cancel_url: cancel_url
+      }
+
+      # Fails and terminates execution if record can't be created
+      {:ok, _} = Billings.update_or_create_paddle_subscription(changeset)
+      text(conn, "OK")
+    else
+      _ ->
+        text(conn, "NOK Invalid passthrough")
+    end
+  end
+
   @doc """
   Handle new subscription payment webhook/event from Paddle.
   This event get triggered when the payment for a subscription
@@ -84,6 +131,7 @@ defmodule TrackearAuthWeb.PaddleController do
   })
   when alert_name == "subscription_payment_succeeded"
   do
+    # Get subscriber from passthrough
     # See first webhook definition for documentation on owner_id & passthrough
     with {:ok, %{"owner_id" => owner_id}} <- Poison.decode(passthrough),
         # Parse next billing date
