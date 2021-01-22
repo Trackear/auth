@@ -10,10 +10,9 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :trackear_auth, TrackearAuthWeb.Endpoint,
-  url: [
-    host: "127.0.0.1",
-    port: String.to_integer(System.get_env("PORT") || "4000")
-  ],
+  http: [:inet6, port: System.get_env("PORT")],
+  url: [host: "0.0.0.0", port: 80],
+  load_from_system_env: true,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production

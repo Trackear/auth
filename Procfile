@@ -1,1 +1,1 @@
-web: sh run.sh
+web: ./.platform_tools/elixir/bin/mix phx.server
