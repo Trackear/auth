@@ -25,4 +25,5 @@ RUN mix local.hex --force && \
 
 COPY . ./
 
+EXPOSE 5000
 CMD ["sh", "./run.sh"]
