@@ -13,7 +13,7 @@ config :trackear_auth, TrackearAuthWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [scheme: "https", host: {:system, "WEB_HOST"}, port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  cache_static_manifest: "priv/static/cache_manifest.json",
+  cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
