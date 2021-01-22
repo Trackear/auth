@@ -14,7 +14,7 @@ config :trackear_auth, TrackearAuthWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT") || "4000")],
   url: [
     scheme: "https",
-    host: "0.0.0.0",
+    host: System.get_env("WEB_HOST"),
     port: 443
   ],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
