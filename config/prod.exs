@@ -12,7 +12,8 @@ use Mix.Config
 config :trackear_auth, TrackearAuthWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [scheme: "https", host: {:system, "WEB_HOST"}, port: 443],
-  force_ssl: [rewrite_on: [:x_forwarded_proto]]
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
 
 # Do not print debug messages in production
 config :logger, level: :info
