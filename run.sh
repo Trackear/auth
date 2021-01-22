@@ -15,4 +15,4 @@ mix phx.digest priv/static
 mix ecto.create
 mix ecto.migrate
 
-mix phx.server
+PORT=4000 MIX_ENV=prod mix phx.server

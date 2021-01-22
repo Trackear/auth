@@ -11,8 +11,8 @@ use Mix.Config
 # before starting your production server.
 config :trackear_auth, TrackearAuthWeb.Endpoint,
   url: [
-    host: "0.0.0.0",
-    port: String.to_integer(System.get_env("PORT") || "5000")
+    host: "127.0.0.1",
+    port: String.to_integer(System.get_env("PORT") || "4000")
   ],
   cache_static_manifest: "priv/static/cache_manifest.json"
 

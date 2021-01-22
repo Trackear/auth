@@ -4,6 +4,8 @@ ENV NODE_VERSION v14.15.4
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_PATH $NVM_DIR/$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
+ENV MIX_ENV prod
+ENV PORT 4000
 
 RUN mkdir $NVM_DIR
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
@@ -25,5 +27,5 @@ RUN mix local.hex --force && \
 
 COPY . ./
 
-EXPOSE 5000
+EXPOSE 4000
 CMD ["sh", "./run.sh"]
