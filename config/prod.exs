@@ -11,10 +11,10 @@ use Mix.Config
 # before starting your production server.
 config :trackear_auth, TrackearAuthWeb.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [scheme: "https", host: System.get_env("WEB_HOST"), port: 443],
+  url: [scheme: "https", host: {:system, "WEB_HOST"}, port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
+  secret_key_base: {:system, "SECRET_KEY_BASE"}
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -57,7 +57,6 @@ config :trackear_auth, TrackearAuth.Mailer,
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-config :trackear_auth, TrackearAuthWeb.Endpoint, force_ssl: [hsts: true]
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.

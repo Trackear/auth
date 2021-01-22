@@ -17,7 +17,7 @@ config :trackear_auth, TrackearAuth.Repo,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 secret_key_base =
-  System.get_env("SECRET_KEY_BASE") ||
+  {:system, "SECRET_KEY_BASE"} ||
     raise """
     environment variable SECRET_KEY_BASE is missing.
     You can generate one by calling: mix phx.gen.secret
@@ -36,4 +36,3 @@ config :trackear_auth, TrackearAuthWeb.Endpoint,
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
-config :trackear_auth, TrackearAuthWeb.Endpoint, server: true
