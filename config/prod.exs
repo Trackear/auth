@@ -12,7 +12,7 @@ use Mix.Config
 config :trackear_auth, TrackearAuthWeb.Endpoint,
   url: [
     host: "auth.trackear.app",
-    port: 80
+    port: String.to_integer(System.get_env("PORT") || "5000")
   ],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
@@ -57,6 +57,7 @@ config :trackear_auth, TrackearAuth.Mailer,
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
+config :trackear_auth, TrackearAuthWeb.Endpoint, force_ssl: [hsts: true]
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
