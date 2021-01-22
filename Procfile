@@ -1,1 +1,1 @@
-web: _build/prod/rel/trackear_auth/bin/trackear_auth start
+web: mix phx.server
