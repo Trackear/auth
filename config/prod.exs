@@ -12,7 +12,7 @@ use Mix.Config
 config :trackear_auth, TrackearAuthWeb.Endpoint,
   url: [
     host: "auth.trackear.app",
-    port: System.get_env("PORT") || 5000
+    port: 80
   ],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
