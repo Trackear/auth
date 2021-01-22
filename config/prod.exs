@@ -13,7 +13,7 @@ config :trackear_auth, TrackearAuthWeb.Endpoint,
   http: [port: System.get_env("PORT")],
   url: [scheme: "https", host: System.get_env("WEB_HOST"), port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  secret_key_base: System.get_env("SECRET_KEY_BASE") || raise "Missing secret key"
+  secret_key_base: "jUpn2ynOD8tplfOo27oRNiK8zm3eUujIcyuzvK5UCYdQnqLFF3KRuZBOOsGhYFdq"
 
 # Do not print debug messages in production
 config :logger, level: :info
