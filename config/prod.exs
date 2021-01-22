@@ -10,10 +10,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :trackear_auth, TrackearAuthWeb.Endpoint,
-  http: [port: {:system, "PORT"}],
-  url: [scheme: "https", host: {:system, "WEB_HOST"}, port: 443],
+  http: [port: System.get_env("PORT")],
+  url: [scheme: "https", host: System.get_env("WEB_HOST"), port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
+  secret_key_base: System.get_env("SECRET_KEY_BASE") || raise "Missing secret key"
 
 # Do not print debug messages in production
 config :logger, level: :info
