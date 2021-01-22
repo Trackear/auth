@@ -2,7 +2,8 @@
 # from environment variables. You can also hardcode secrets,
 # although such is generally not recommended and you have to
 # remember to add this file to your .gitignore.
-use Mix.Config
+# use Mix.Config
+import Config
 
 database_url =
   System.get_env("DATABASE_URL") ||
@@ -36,3 +37,4 @@ config :trackear_auth, TrackearAuthWeb.Endpoint,
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
+config :trackear_auth, TrackearAuthWeb.Endpoint, server: true
