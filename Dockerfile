@@ -24,3 +24,5 @@ RUN mix local.hex --force && \
     mix deps.compile
 
 COPY . ./
+
+CMD ["sh", "./run.sh"]
