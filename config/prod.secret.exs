@@ -25,7 +25,7 @@ secret_key_base =
 
 config :trackear_auth, TrackearAuthWeb.Endpoint,
   http: [
-    host: "auth.trackear.app",
+    host: "0.0.0.0",
     port: String.to_integer(System.get_env("PORT") || "5000"),
     transport_options: [socket_opts: [:inet6]]
   ],
